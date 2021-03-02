@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+
+    <title>Books & Authors</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+    <!-- narbar para seleccionar lobros o autores-->
+    <div>
+        <nav class="navbar navbar-light bg-light">
+            <nav class="nav nav-pills flex-column flex-sm-row">
+                <a class="flex-sm-fill text-sm-center nav-link " href="/">Libros</a>
+                <a class="flex-sm-fill text-sm-center nav-link " href="/view_authors">Autores</a>
+
+            </nav>
+        </nav>
+        <!-- cuerpo despliege de informacion del llibro seleccionado-->
+        <div id="container" class="container bg-light content-md-center mx-auto">
+            <div class="muestra_infor">
+                <h1 class="align-middle mw-100"> {{info_libro.title}} </h1>
+                <h3> ID: <b>{{info_libro.id}}</b></h3>
+                <div class="descripcion row ">
+
+                    <h5 class="col align-baseline">Discipción: </h5>
+
+                    <p class="col-11 align-middle text-justify mw-100"> {{info_libro.desc}} </p>
+                </div>
+                <h5 class="col align-baseline">Autores: </h5>
+                {% for dato in autor %}
+                <li> {{dato.first_name}} {{dato.last_name}} </li>
+                {% endfor %}
+                <br>
+                <hr>
+            </div>
+            <!-- despliege para agregar autores al libro-->
+            <form action="asignar_autor/{{info_libro.id}}" method="POST">
+                {% csrf_token %}
+                <h5>Agregar autor:</h5>
+                <div class="form-row align-items-center">
+                    <div class="col-auto my-1">
+                        <label class="mr-sm-2 sr-only" for="inlineFormCustomSelect">Preference</label>
+                        <select name="id_autor" class="custom-select mr-sm-2" required>
+                              <option selected>Seleccionar...</option>
+                              {% for dato in autores_despliege %}
+                              <option value=" {{dato.id}} "> {{dato.first_name}} {{dato.last_name}} </option>
+                              {% endfor %}
+                            </select>
+                    </div>
+
+                    <div class="col-auto my-1">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+            </form>
+
+
+
+
+        </div>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+</body>
+
+</html>

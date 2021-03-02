@@ -1,0 +1,126 @@
+>>> from books_authors_app.models import Libro, Autor
+
+Crea 5 libros:
+>>> c_sharp = Libro.objects.create(title = "C Sharp", desc = "descripcion del libro")
+>>> java = Libro.objects.create(title = "Java", desc = "descripcion libro java")
+>>> Python = Libro.objects.create(title = "Python", desc = "descripcion libro python")
+>>> PHP = Libro.objects.create(title = "PHP", desc = "descripcion libro PHP")
+>>> Ruby = Libro.objects.create(title = "Ruby", desc = "descripcion libro Ruby")
+
+Crear 5 autores:
+>>> jane_austen = Autor.objects.create(first_name = "Jane", last_name = "Austen")
+>>> Emily_dickinson = Autor.objects.create(first_name = "Emily", last_name = "Dickinson")
+>>> Fyodor_dostoevksy = Autor.objects.create(first_name = "Fyodor", last_name = "Dostoevksy")
+>>> William_shakespeare = Autor.objects.create(first_name = "William", last_name = "Shakespeare")
+>>> Lau_tzu = Autor.objects.create(first_name = "Lau", last_name = "Tzu")
+
+
+Crear nuevo campo de texto  "notas", ejecutar makemigrations y migrate:
+(django_env) C:\python_stack\django\django_orm\book_authors_proj>python manage.py makemigrations
+Migrations for 'books_authors_app':
+    books_authors_app\migrations\0002_autor_notas.py
+        - Add field notas to autor
+
+(django_env) C:\python_stack\django\django_orm\book_authors_proj>python manage.py migrate
+Operations to perform:
+    Apply all migrations: admin, auth, books_authors_app, contenttypes, sessions
+Running migrations:
+    Applying books_authors_app.0002_autor_notas... OK
+
+Cambiar de nombre el libro C Sharp:
+>>> libro = Libro.objects.get(id=1)
+>>> libro.title
+'C Sharp'
+>>> libro.title = "C #"
+>>> libro.title
+'C #'
+
+Cambiar el nombre del cuarto autor:
+>>> autor = Autor.objects.get(id=4)
+>>> autor.first_name
+'William'
+>>> autor.first_name = "Bill"
+>>> autor.first_name
+'Bill'
+>>> autor.save()
+
+
+
+Asigna el primer autor a los primeros 2 libros:
+>>> autor_01 = Autor.objects.get(id=1)
+>>> autor_01.first_name
+'Jane'
+>>> libro_01 = Libro.objects.get(id=1)
+>>> autor_01.libros.add(libro_01)
+>>> libro_02 = Libro.objects.get(id=2)
+>>> autor_01.libros.add(libro_02)
+>>> autor_01.libros.all()
+<QuerySet [<Libro: Libro object (1)>, <Libro: Libro object (2)>]>
+
+
+Asigne el segundo autor a los primeros 3 libros:
+>>> autor_02 = Autor.objects.get(id=2)
+>>> autor_02.first_name
+'Emily'
+>>> autor_02.libros.add(libro_01)
+>>> autor_02.libros.add(libro_02)
+>>> libro_03 = Libro.objects.get(id=3)
+>>> autor_02.libros.add(libro_03)
+>>> autor_02.libros.all()
+<QuerySet [<Libro: Libro object (1)>, <Libro: Libro object (2)>, <Libro: Libro object (3)>]>
+
+
+Asigna el tercer autor a los primeros 4 libros:
+>>> autor_03 = Autor.objects.get(id=3)
+>>> autor_03.first_name
+'Fyodor'
+>>> autor_03.libros.add(libro_01)
+>>> autor_03.libros.add(libro_02)
+>>> autor_03.libros.add(libro_03)
+>>> libro_04 = Libro.objects.get(id=4)
+>>> autor_03.libros.add(libro_04)
+>>> autor_03.libros.all()
+<QuerySet [<Libro: Libro object (1)>, <Libro: Libro object (2)>, <Libro: Libro object (3)>, <Libro: Libro object (4)>]>
+
+Asigne el cuarto autor a los primeros 5 libros (o en otras palabras, todos los libros):
+>>> autor_04 = Autor.objects.get(id=4)
+>>> autor_04.libros.add(libro_01)
+>>> autor_04.libros.add(libro_02)
+>>> autor_04.libros.add(libro_03)
+>>> autor_04.libros.add(libro_04)
+>>> libro_05 = Libro.objects.get(id=5)
+>>> autor_04.libros.add(libro_05)
+>>> autor_04.libros.all()
+<QuerySet [<Libro: Libro object (1)>, <Libro: Libro object (2)>, <Libro: Libro object (3)>, <Libro: Libro object (4)>, <Libro: Libro object (5)>]>
+
+recupera a todos los autores del tercer libro:
+>>> libro_03.libros_autores.all()
+<QuerySet [<Autor: Autor object (2)>, <Autor: Autor object (3)>, <Autor: Autor object (4)>]>
+
+
+eliminar al primer autor del tercer libro:
+>>> libro_03.libros_autores.remove(autor_02)
+>>> libro_03.libros_autores.all()
+<QuerySet [<Autor: Autor object (3)>, <Autor: Autor object (4)>]>
+
+
+
+Agregue el quinto autor como uno de los autores del segundo libro:
+>>> autor_05 = Autor.objects.get(id=5)
+>>> libro_02.libros_autores.add(autor_05)
+>>> libro_02.libros_autores.all()
+<QuerySet [<Autor: Autor object (1)>, <Autor: Autor object (2)>, <Autor: Autor object (3)>, <Autor: Autor object (4)>, <Autor: Autor object (5)>]>
+
+
+Encuentra todos los libros de los que el tercer autor es parte:
+>>> autor_03.libros.all()
+<QuerySet [<Libro: Libro object (1)>, <Libro: Libro object (2)>, <Libro: Libro object (3)>, <Libro: Libro object (4)>]>
+
+
+Encuentra todos los autores que contribuyeron al quinto libro:
+>>> libro_05.libros_autores.all()
+<QuerySet [<Autor: Autor object (4)>]>
+
+
+
+
